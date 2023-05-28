@@ -35,7 +35,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 TANGGAL=$(date +"%F%S")
 
 # Compiler and Build Information
-TOOLCHAIN=neutron # List (clang = nexus14 | aosp | nexus15 | proton )
+TOOLCHAIN=azure # List (clang = nexus14 | aosp | nexus15 | proton )
 #LINKER=ld # List ( ld.lld | ld.bfd | ld.gold | ld )
 VERBOSE=0
 
