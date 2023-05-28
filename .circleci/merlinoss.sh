@@ -63,7 +63,7 @@ elif [[ $TOOLCHAIN == "nexus15" ]]; then
        git clone --depth=1 https://gitlab.com/Project-Nexus/nexus-clang.git -b nexus-15 clang
 elif [[ $TOOLCHAIN == "neutron" ]]; then
        bash <(curl -s https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman) -S=latest
-       #sudo apt install libelf-dev libarchive-tools
+       sudo apt install libelf-dev libarchive-tools
        bash -c "$(wget -O - https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
 fi
 
