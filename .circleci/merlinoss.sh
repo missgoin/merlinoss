@@ -25,8 +25,8 @@ function exports() {
   export KBUILD_BUILD_USER="unknown"
   export PROCS=$(nproc --all)
   export DISTRO=$(source /etc/os-release && echo "${NAME}")
-  #export LC_ALL=C && export USE_CCACHE=1
-  #ccache -M 100G
+  export LC_ALL=C && export USE_CCACHE=1
+  ccache -M 100G
 
 # Variables
 KERVER=$(make kernelversion)
@@ -35,7 +35,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 TANGGAL=$(date +"%F%S")
 
 # Compiler and Build Information
-TOOLCHAIN=proton # List (clang = nexus14 | aosp | nexus15 | proton )
+TOOLCHAIN=azure # List (clang = nexus14 | aosp | nexus15 | proton )
 #LINKER=ld # List ( ld.lld | ld.bfd | ld.gold | ld )
 VERBOSE=0
 
@@ -83,17 +83,17 @@ function compile() {
 START=$(date +"%s")
 
 # Generate .config
-make O=out ARCH=arm64 ${DEFCONFIG}
+make O=out ARCH=arm64 ${DEFCONFIG} LLVM=1 LLVM_IAS=1
 
 # Start Compilation
 if [[ "$TOOLCHAIN" == "azure" ]]; then
-     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 V=$VERBOSE 2>&1 | tee error.log
+     make -j$(nproc --all) O=out ARCH=$ARCH CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
 elif [[ "$TOOLCHAIN" == "proton" ]]; then
-     make -j$(nproc --all) O=out ARCH=$ARCH CC="clang" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
+     make -j$(nproc --all) O=out ARCH=$ARCH CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
 elif [[ "$TOOLCHAIN" == "nexus" ]]; then
      make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 V=$VERBOSE 2>&1 | tee error.log
 elif [[ "$TOOLCHAIN" == "neutron" ]]; then 
-     make -j$(nproc --all) O=out ARCH=arm64 CC="clang" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
+     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
 fi
 
 }
@@ -124,6 +124,3 @@ compile
 zipping
 
 ##------------------------*****-----------------------------##
-
-
-
