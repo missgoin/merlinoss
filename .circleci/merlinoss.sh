@@ -10,7 +10,7 @@ set -e
 KERNEL_DIR="$(pwd)"
 VERSION=01
 MODEL=Xiaomi
-DEVICE=lancelot
+DEVICE=merlin
 DEFCONFIG=${DEVICE}_defconfig
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 #C_BRANCH=$(git branch --show-current)
@@ -35,7 +35,7 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 TANGGAL=$(date +"%F%S")
 
 # Compiler and Build Information
-TOOLCHAIN=azure # List (clang = nexus14 | aosp | nexus15 | proton )
+TOOLCHAIN=neutron # List (clang = nexus14 | aosp | nexus15 | proton )
 #LINKER=ld # List ( ld.lld | ld.bfd | ld.gold | ld )
 VERBOSE=0
 
@@ -54,7 +54,7 @@ FINAL_ZIP_ALIAS=Kernullance-${TANGGAL}.zip
 function clone() {
 # Get Toolchain
 if [[ $TOOLCHAIN == "azure" ]]; then
-       git clone --depth=1  https://gitlab.com/Panchajanya1999/azure-clang clang
+       git clone --depth=1 https://gitlab.com/Panchajanya1999/azure-clang clang
 elif [[ $TOOLCHAIN == "nexus14" ]]; then
        git clone --depth=1 https://gitlab.com/Project-Nexus/nexus-clang.git -b nexus-14 clang
 elif [[ $TOOLCHAIN == "proton" ]]; then
@@ -63,7 +63,7 @@ elif [[ $TOOLCHAIN == "nexus15" ]]; then
        git clone --depth=1 https://gitlab.com/Project-Nexus/nexus-clang.git -b nexus-15 clang
 elif [[ $TOOLCHAIN == "neutron" ]]; then
        bash <(curl -s https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman) -S=latest
-       sudo apt install libelf-dev libarchive-tools
+       #sudo apt install libelf-dev libarchive-tools
        bash -c "$(wget -O - https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
 fi
 
@@ -93,7 +93,7 @@ elif [[ "$TOOLCHAIN" == "proton" ]]; then
 elif [[ "$TOOLCHAIN" == "nexus" ]]; then
      make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 V=$VERBOSE 2>&1 | tee error.log
 elif [[ "$TOOLCHAIN" == "neutron" ]]; then 
-     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
+     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
 fi
 
 }
