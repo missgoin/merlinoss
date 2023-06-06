@@ -20,7 +20,7 @@ DEVICE=merlin
 DEFCONFIG=${DEVICE}_defconfig
 
 # Select LTO variant ( Full LTO by default )
-DISABLE_LTO=0
+DISABLE_LTO=1
 THIN_LTO=0
 
 # Files
@@ -48,7 +48,7 @@ FINAL_ZIP_ALIAS=Karenulmerli-${TANGGAL}.zip
 ##----------------------------------------------------------##
 # Specify compiler.
 
-COMPILER=trb
+COMPILER=azure
 
 ##----------------------------------------------------------##
 # Specify Linker
@@ -205,15 +205,15 @@ START=$(date +"%s")
 	       CROSS_COMPILE=aarch64-linux-gnu- \
 	       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
 	       LLVM=1 \
-	       #LLVM_IAS=1 \
+	       LLVM_IAS=1 \
 	       #LD=${LINKER} \
-	       AR=llvm-ar \
-	       NM=llvm-nm \
-	       OBJCOPY=llvm-objcopy \
-	       OBJDUMP=llvm-objdump \
-	       STRIP=llvm-strip \
-	       READELF=llvm-readelf \
-	       OBJSIZE=llvm-size \
+	       #AR=llvm-ar \
+	       #NM=llvm-nm \
+	       #OBJCOPY=llvm-objcopy \
+	       #OBJDUMP=llvm-objdump \
+	       #STRIP=llvm-strip \
+	       #READELF=llvm-readelf \
+	       #OBJSIZE=llvm-size \
 	       V=$VERBOSE 2>&1 | tee error.log
 	elif [ -d ${KERNEL_DIR}/cosmic ];
 	   then
