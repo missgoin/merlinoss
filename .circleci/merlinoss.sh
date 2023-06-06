@@ -26,7 +26,7 @@ THIN_LTO=0
 # Files
 IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
-#DTB=$(pwd)/out/arch/arm64/boot/dts/qcom
+DTB=$(pwd)/out/arch/arm64/boot/dts/mediatek
 
 # Verbose Build
 VERBOSE=0
@@ -204,8 +204,8 @@ START=$(date +"%s")
 	       CC=clang \
 	       CROSS_COMPILE=aarch64-linux-gnu- \
 	       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-	       LLVM=1 \
-	       LLVM_IAS=1 \
+	       #LLVM=1 \
+	       #LLVM_IAS=1 \
 	       #LD=${LINKER} \
 	       #AR=llvm-ar \
 	       #NM=llvm-nm \
@@ -290,7 +290,7 @@ function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp $IMAGE AnyKernel3
 	cp $DTBO AnyKernel3
-	#find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb.img
+	find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
