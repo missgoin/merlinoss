@@ -783,9 +783,17 @@ endif
 # Use make W=1 to enable them (see scripts/Makefile.extrawarn)
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
 
+#ifeq ($(ld-name),lld)
+#LDFLAGS += -O2
+#endif
+
 ifeq ($(ld-name),lld)
-LDFLAGS += -z norelro
+LDFLAGS += --lto-O3
 endif
+
+#ifeq ($(ld-name),lld)
+#   LDFLAGS += -z norelro
+#endif 
 
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
 ifdef CONFIG_FRAME_POINTER
